@@ -2,7 +2,7 @@ import os
 from firebase_admin import credentials, firestore
 import firebase_admin
 from google.cloud import firestore
-from google.adk.agents import Agent
+from google.adk.agents import Agent, LlmAgent, LoopAgent
 from dotenv import load_dotenv
 import google.generativeai as genai
 
