@@ -3,8 +3,6 @@ from agent import answer_from_textbook
 
 import vertexai
 from vertexai import agent_engines
-import os
-os.environ['GRPC_DNS_RESOLVER'] = 'native'
 
 
 PROJECT_ID = "sahayakai-466115"
