@@ -3,6 +3,9 @@ from agent import answer_from_textbook
 
 import vertexai
 from vertexai import agent_engines
+import os
+os.environ['GRPC_DNS_RESOLVER'] = 'native'
+
 
 PROJECT_ID = "sahayakai-466115"
 LOCATION = "us-east4"
@@ -20,5 +23,8 @@ app = reasoning_engines.AdkApp(
 )
 
 remote_app = agent_engines.create(
-    agent_engine=app
+    agent_engine=app,
+    requirements=[
+        "google-cloud-aiplatform[adk,agent_engines]","cloudpickle","llama_index","google-adk"   
+    ]
 )
