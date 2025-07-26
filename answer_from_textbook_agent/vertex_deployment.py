@@ -1,7 +1,8 @@
 from vertexai.preview import reasoning_engines
-from answer_from_textbook_agent.agent import answer_from_textbook
+from agent import answer_from_textbook
 
 import vertexai
+from vertexai import agent_engines
 
 PROJECT_ID = "sahayakai-466115"
 LOCATION = "us-east4"
@@ -18,9 +19,6 @@ app = reasoning_engines.AdkApp(
     enable_tracing=True,
 )
 
-session = app.create_session(user_id="u_123")
-for event in app.stream_query(
-    user_id="u_123",
-    session_id=session.id,
-    message="Tell me complete story about hecko in English",
-): print(event)
+remote_app = agent_engines.create(
+    agent_engine=app
+)
