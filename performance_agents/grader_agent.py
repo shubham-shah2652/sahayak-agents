@@ -4,10 +4,12 @@ from PyPDF2 import PdfReader
 import pytesseract
 import google.generativeai as genai
 from google.adk.agents import Agent
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Configure your API key
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-
 
 
 def extract_text_from_pdf(file_path: str) -> dict:
@@ -77,4 +79,7 @@ grader_agent = Agent(
         "Call extract_text_from_pdf or extract_text_from_image to extract content, then grade_combined_answer."
     ),
     tools=[extract_text_from_pdf, extract_text_from_image, grade_combined_answer],
+    output_key="grading"
 )
+
+

@@ -1,7 +1,6 @@
 # local_test_grader_agent.py
 from vertexai.preview import reasoning_engines
-from grader_agent import grader_agent
-
+from sequential_agent import sequential_grader
 import vertexai
 
 PROJECT_ID = "sahayakai-466115"
@@ -15,10 +14,11 @@ vertexai.init(
 )
 
 app = reasoning_engines.AdkApp(
-    agent=grader_agent,
+    agent=sequential_grader,
     enable_tracing=True,
 )
 
+student_id=1
 pdf_path = r"C:\Users\Sanya Nanda\Downloads\Lab1.pdf"
 image_path = r"C:\Users\Sanya Nanda\Sanya-Home\github\sahayak-agents\performance_agents\student_answer_sheet.jpg"
 rubric = """
@@ -37,6 +37,8 @@ Grade a student's assignment using the following rubric:
 Use the tools to extract text from: image file: {image_path}
 
 Combine both texts as a single student answer and evaluate it using the rubric.
+
+After grading, store the result in Firestore using student_id: {student_id}.
 """
 
 session = app.create_session(user_id="u_123")
@@ -45,4 +47,5 @@ for event in app.stream_query(
     session_id=session.id,
     message=f"{message}",
 ): print(event)
+
 
