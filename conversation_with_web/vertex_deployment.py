@@ -1,7 +1,9 @@
 from vertexai.preview import reasoning_engines
-from conversation_with_web.agent import conversation_with_web
+from agent import conversation_with_web
 
 import vertexai
+from vertexai import agent_engines
+
 
 PROJECT_ID = "sahayakai-466115"
 LOCATION = "us-east4"
@@ -18,9 +20,9 @@ app = reasoning_engines.AdkApp(
     enable_tracing=True,
 )
 
-session = app.create_session(user_id="u_123")
-for event in app.stream_query(
-    user_id="u_123",
-    session_id=session.id,
-    message="Tell me complete story about hecko in English",
-): print(event)
+remote_app = agent_engines.create(
+    agent_engine=app,
+    requirements=[
+        "google-cloud-aiplatform[adk,agent_engines]","cloudpickle","llama_index","google-adk","google-genai"   
+    ]
+)
