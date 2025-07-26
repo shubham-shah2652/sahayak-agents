@@ -9,7 +9,7 @@ from .prompts import IMAGE_GEN_AGENT
 import vertexai
 
 PROJECT_ID = "sahayakai-466115"
-LOCATION = "us-east4"
+LOCATION = "us-central1"
 STAGING_BUCKET = "gs://sahayak-agents-bucket"
 
 vertexai.init(
