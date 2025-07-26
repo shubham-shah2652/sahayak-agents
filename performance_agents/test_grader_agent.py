@@ -19,8 +19,8 @@ app = reasoning_engines.AdkApp(
     enable_tracing=True,
 )
 
-pdf_path = "sample_assignment.pdf"
-image_path = "sample_diagram.png"
+pdf_path = r"C:\Users\Sanya Nanda\Downloads\Lab1.pdf"
+image_path = r"C:\Users\Sanya Nanda\Sanya-Home\github\sahayak-agents\performance_agents\student_answer_sheet.jpg"
 rubric = """
 1. Clarity – 3 points
 2. Correctness – 4 points
@@ -34,9 +34,7 @@ Grade a student's assignment using the following rubric:
 
 {rubric}
 
-Use the tools to extract text from:
-- PDF file: {pdf_path}
-- Image file: {image_path}
+Use the tools to extract text from: image file: {image_path}
 
 Combine both texts as a single student answer and evaluate it using the rubric.
 """

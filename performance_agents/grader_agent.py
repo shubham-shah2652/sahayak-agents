@@ -9,6 +9,7 @@ from google.adk.agents import Agent
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 
+
 def extract_text_from_pdf(file_path: str) -> dict:
     """Extracts text from a student's PDF file."""
     try:
@@ -17,34 +18,49 @@ def extract_text_from_pdf(file_path: str) -> dict:
         return {"status": "success", "text": text.strip()}
     except Exception as e:
         return {"status": "error", "error_message": f"PDF extraction failed: {str(e)}"}
+    
 
+# import google.generativeai as genai
+# from PIL import Image
 
 def extract_text_from_image(image_path: str) -> dict:
-    """Extracts handwriting or printed text from an image using OCR."""
+    """Uses Gemini Vision to extract and describe text from an image."""
     try:
+        model = genai.GenerativeModel("gemini-2.0-flash")
         image = Image.open(image_path)
-        text = pytesseract.image_to_string(image)
-        return {"status": "success", "text": text.strip()}
+        response = model.generate_content(["Extract all visible written text from this image:", image])
+        return {"status": "success", "text": response.text.strip()}
     except Exception as e:
-        return {"status": "error", "error_message": f"Image OCR failed: {str(e)}"}
+        return {"status": "error", "error_message": f"Gemini Vision failed: {str(e)}"}
+
+
+
+# def extract_text_from_image(image_path: str) -> dict:
+#     """Extracts handwriting or printed text from an image using OCR."""
+#     try:
+#         image = Image.open(image_path)
+#         text = pytesseract.image_to_string(image)
+#         return {"status": "success", "text": text.strip()}
+#     except Exception as e:
+#         return {"status": "error", "error_message": f"Image OCR failed: {str(e)}"}
 
 
 def grade_combined_answer(answer_text: str, rubric: str) -> dict:
     """Grades the student's answer using a rubric via Gemini."""
     try:
-        model = genai.GenerativeModel("gemini-1.5-pro")
+        model = genai.GenerativeModel("gemini-2.0-flash")
         prompt = f"""
-You are a grading assistant. Grade the following student's answer using the rubric.
+        You are a grading assistant. Grade the following student's answer using the rubric.
 
-Rubric:
-{rubric}
+        Rubric:
+        {rubric}
 
-Answer:
-{answer_text}
+        Answer:
+        {answer_text}
 
-Respond in JSON format:
-{{"score": float (out of 10), "feedback": string}}
-"""
+        Respond in JSON format:
+        {{"score": float (out of 10), "feedback": string}}
+        """
         response = model.generate_content(prompt).text
         return {"status": "success", "grading": response}
     except Exception as e:
@@ -53,7 +69,7 @@ Respond in JSON format:
 
 grader_agent = Agent(
     name="pdf_image_grader",
-    model="gemini-2.0-pro",
+    model="gemini-2.0-flash",
     description="Agent that grades student answers from PDFs and images based on a rubric.",
     instruction=(
         "You are a helpful academic assistant. You can extract answers from student-submitted PDF and image files, "
