@@ -20,11 +20,16 @@ app = reasoning_engines.AdkApp(
     enable_tracing=True,
 )
 
-remote_app = agent_engines.create(
-    agent_engine=app,
-    requirements=[
+# remote_app = agent_engines.create(
+#     agent_engine=app,
+#     requirements=[
+#         "google-cloud-aiplatform[adk,agent_engines]","cloudpickle","llama_index","google-adk","google-genai"   
+#     ],extra_packages=[
+#         "./conversation_with_web/sub_agents",
+#     ],
+# )
+remote_app = agent_engines.update(resource_name='projects/522049177242/locations/us-east4/reasoningEngines/5221220080494313472',agent_engine=app,requirements=[
         "google-cloud-aiplatform[adk,agent_engines]","cloudpickle","llama_index","google-adk","google-genai"   
     ],extra_packages=[
         "./conversation_with_web/sub_agents",
-    ],
-)
+    ],)

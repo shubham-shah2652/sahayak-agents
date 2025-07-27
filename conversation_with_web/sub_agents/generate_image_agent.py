@@ -7,6 +7,8 @@ import base64
 from google.adk.agents import Agent
 from .prompts import IMAGE_GEN_AGENT
 import vertexai
+import uuid
+from google.cloud import storage
 
 PROJECT_ID = "sahayakai-466115"
 LOCATION = "us-central1"
@@ -17,7 +19,24 @@ vertexai.init(
     location=LOCATION,
     staging_bucket=STAGING_BUCKET,
 )
-generation_model = ImageGenerationModel.from_pretrained("imagen-4.0-generate-preview-06-06")
+generation_model = ImageGenerationModel.from_pretrained("imagen-4.0-fast-generate-preview-06-06")
+
+storage_client = storage.Client(project=PROJECT_ID)
+_bucket_name = "conversation_images"
+bucket = storage_client.bucket(_bucket_name)
+
+def _upload_to_bucket(image_bytes: bytes, folder: str = "generated_images") -> str:
+    """
+    Upload raw PNG bytes to GCS and return the gs:// path.
+    """
+    # generate a unique filename
+    filename = f"{folder}/{uuid.uuid4().hex}.png"
+    blob = bucket.blob(filename)
+    print("Storing image to bucket")
+    blob.upload_from_string(image_bytes, content_type="image/png")
+    print("Uploaded to bucket")
+    return f"gs://{_bucket_name}/{filename}"
+
 def generate_image(prompt: str):
     images = generation_model.generate_images(
         prompt=prompt,
@@ -30,14 +49,17 @@ def generate_image(prompt: str):
     )
     image = images[0]
     pil_image = typing.cast(PIL_Image.Image, image._pil_image)
-    # Resize to fit max dimensions if necessary
+
+    # 2. resize
     pil_image = PIL_ImageOps.contain(pil_image, (600, 350))
 
-    # Convert PIL image to base64
-    buffered = io.BytesIO()
-    pil_image.save(buffered, format="PNG")
-    img_base64 = base64.b64encode(buffered.getvalue()).decode("utf-8")
-    return img_base64
+    # 3. write to bytes
+    buffer = io.BytesIO()
+    pil_image.save(buffer, format="PNG")
+    img_bytes = buffer.getvalue()
+
+    # 4. upload & return path
+    return _upload_to_bucket(img_bytes)
 
 image_gen_agent = Agent(
     model='gemini-2.5-pro',

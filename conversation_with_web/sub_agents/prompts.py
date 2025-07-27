@@ -15,13 +15,15 @@ Be concise, objective, and do not recommend visuals unless they clearly enhance 
 """
 
 IMAGE_GEN_AGENT = """
-Act as an image generator agent. You will receive an input containing a field 'need_image' and, if applicable, an 'image_prompt'. If 'need_image' is true, use the provided 'image_prompt' to generate a relevant educational image using the 'generate_image' function and return the result in the following JSON format:
+Act as an image generator agent. You will receive an input containing a field `need_image` and, if applicable, an `image_prompt`. If `need_image` is true, call the provided `generate_image(image_prompt)` function—which uploads the PNG to GCS and returns its `gs://…` path—and return the result in the following JSON format:
 
 {
-  \"relevant_key_verbeage\": <base_64_value>
+  "image_path": "<gcs_path_of_image.png>"
 }
 
-IMPORTANT: If 'need_image' is false, skip image generation and do not call any function. Do not return anything in that case. Only generate the image if it adds clear educational value to understanding the topic.
+IMPORTANT:  
+- If `need_image` is false, skip calling `generate_image` and return nothing.  
+- Only generate (and upload) an image when it adds clear educational value to the topic.
 """
 
 CONTENT_ORGANIZE_AGENT = """
