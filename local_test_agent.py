@@ -1,5 +1,5 @@
 from vertexai.preview import reasoning_engines
-from conversation_with_web.agent import conversation_with_web
+from conversation_with_web.sub_agents.agent import conversation_with_web
 
 import vertexai
 

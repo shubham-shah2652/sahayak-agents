@@ -10,7 +10,7 @@ import vertexai
 
 PROJECT_ID = "sahayakai-466115"
 LOCATION = "us-central1"
-STAGING_BUCKET = "gs://sahayak-agents-bucket"
+STAGING_BUCKET = "gs://sahayak-conversation-agent"
 
 vertexai.init(
     project=PROJECT_ID,
