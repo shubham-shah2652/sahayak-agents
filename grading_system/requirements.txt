@@ -1,0 +1,17 @@
+google-cloud-aiplatform[adk,agent_engines]
+cloudpickle
+google-adk
+# pillow
+google.generativeai
+# PyPDF2
+# firebase_admin
+# functions-framework
+# google.cloud
+
+# google-generativeai[agentchat]
+PyPDF2 
+opencv-python 
+pillow 
+google-cloud-firestore
+google-genai
+
